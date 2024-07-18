@@ -3,7 +3,6 @@ services:
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
-    image: channel_factory_geo_navigator_api
     command: /start
     volumes:
       - .:/app
