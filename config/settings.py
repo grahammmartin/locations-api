@@ -63,10 +63,13 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     # all third party apps go here
+    "rest_framework",
+    "corsheaders",
 ]
 
 LOCAL_APPS = [
     # custom apps go here
+    "locations"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -78,6 +81,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -171,7 +175,19 @@ LOGGING = {
 }
 
 
+# django-rest-framework
+# -------------------------------------------------------------------------------
+# django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
+REST_FRAMEWORK = {}
+# django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
+CORS_URLS_REGEX = r"^/api/.*$"
+
+
+# Local env settings
+# -------------------------------------------------------------------------------
 if DEBUG:
+    CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000"]
+
     # django-debug-toolbar
     # ------------------------------------------------------------------------------
     # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites
