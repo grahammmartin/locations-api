@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from .helpers import haversine
 from .models import LocationRequest
 
 
@@ -48,3 +50,28 @@ class CoorsLocationRequestSerializer(BaseLocationRequestSerializer):
 
         return location
 
+class DistanceLocationRequestSerializer(serializers.Serializer):
+    from_address = serializers.CharField()
+    to_address = serializers.CharField()
+    distance = serializers.CharField(read_only=True)
+
+    def create(self, validated_data):
+        source = validated_data.pop("from_address")
+        destination = validated_data.pop("to_address")
+
+        source_serializer = AddressLocationRequestSerializer(data={"user_address": source})
+        destination_serializer = AddressLocationRequestSerializer(data={"user_address": destination})
+
+        if source_serializer.is_valid():
+            source = source_serializer.save()
+
+        if destination_serializer.is_valid():
+            destination = destination_serializer.save()
+
+        distance_km = haversine(point_1=source.point, point_2=destination.point)
+
+        return {
+            "from_address": source.formatted_address,
+            "to_address": destination.formatted_address,
+            "distance": "%.2f KM" %(distance_km)
+        }
