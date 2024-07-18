@@ -1,12 +1,17 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 
+from .managers import LocationRequestManager
+
+
 class LocationRequest(TimeStampedModel):
     address = models.TextField()
     formatted_address = models.TextField()
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
 
+    maps = LocationRequestManager()
+    objects = models.Manager()
 
     class Meta:
         indexes = [
